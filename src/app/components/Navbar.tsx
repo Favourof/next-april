@@ -7,6 +7,7 @@ const Navbar = () => {
     { title: "about", route: "about" },
     { title: "contact", route: "contact" },
     { title: "Dashboard", route: "dashboard" },
+    { title: "Product", route: "product" },
   ];
   return (
     <div>
@@ -14,7 +15,7 @@ const Navbar = () => {
         {links.map((link, i) => (
           <Link
             href={link.route}
-            className="hover:bg-white hover:text-black p-2 rounded-full cursor-pointer "
+            className="hover:bg-white text-amber-300 hover:text-black p-2 rounded-full cursor-pointer "
             key={i}
           >
             {link.title}
