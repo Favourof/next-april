@@ -1,3 +1,5 @@
+import { stringify } from "querystring";
+
 export default function Home() {
   // let name = 26
   // name = 'favour'
@@ -127,6 +129,33 @@ export default function Home() {
   // use type when you are dealing with primities data
   //  use interface when you are dealing with object or array of object
 
+  //  Function Typing
+
+  function UserName(name: string): boolean {
+    return true;
+  }
+
+  function calculate(a: number, b?: number): number {
+    // const add = a + b;
+    return a + b;
+  }
+
+  function postLiveBlog(blog: string, pupblished: boolean = false): string {
+    return `The ${blog} is ${pupblished ? "Live" : "Draft"}`;
+  }
+  console.log(calculate(5));
+
+  console.log(postLiveBlog("Typescript"));
+
+  console.log(postLiveBlog("Typescript", true));
+
+  //  function printName(name: string): never {
+  //   while (lookup...) {
+
+  //   }
+  //  }
+
+  UserName("99");
   return (
     <div>
       <h1>Hello world</h1>
