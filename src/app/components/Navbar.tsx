@@ -4,10 +4,10 @@ import React from "react";
 const Navbar = () => {
   const links = [
     { title: "Home", route: "/" },
-    { title: "about", route: "about" },
-    { title: "contact", route: "contact" },
-    { title: "Dashboard", route: "dashboard" },
-    { title: "Product", route: "product" },
+    { title: "Register", route: "/register" },
+    { title: "login", route: "/login" },
+    { title: "Dashboard", route: "/dashboard" },
+    { title: "Product", route: "/product" },
   ];
   return (
     <div>
