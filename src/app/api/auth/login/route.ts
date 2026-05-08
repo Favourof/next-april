@@ -29,11 +29,24 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: "7d",
-    });
+    const token: string = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: "7d",
+      },
+    );
     const { password: _, ...userData } = user;
-    return NextResponse.json({ user: userData, token }, { status: 200 });
+    console.log("User logged in:", userData, token);
+    const response = NextResponse.json(
+      { user: userData, token },
+      { status: 200 },
+    );
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+    return response;
   } catch (error) {
     console.error("Error registering user:", error);
     return NextResponse.json(

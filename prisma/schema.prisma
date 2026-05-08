@@ -21,4 +21,15 @@ model User {
   password String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  posts BlogPost[]
 } 
+
+model BlogPost {
+  id String @id @default(uuid())
+  title String
+  content String
+  authorId String
+  author User @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
