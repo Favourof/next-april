@@ -1,15 +1,18 @@
 "use client";
 import { authApi } from "@/lib/axios";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const { login, error, loading } = useContext(AuthContext)!;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,24 +20,12 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
-
     try {
-      const res = await authApi.login(formData);
-
-      const data = res.data;
-      if (res.status >= 200 && res.status < 300) {
-        setMessage("User logged in successfully!");
-      } else {
-        setMessage(data.error || "Registration failed");
-      }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Server error";
-      setMessage(errorMessage);
-    } finally {
-      setLoading(false);
+      await login(formData);
+      router.push("/dashboard");
+    } catch (err) {
+      // context already tracks the error
+      console.error(err);
     }
   };
   return (
@@ -76,7 +67,7 @@ const LoginPage = () => {
         {loading ? "logging in..." : "Login"}
       </button>
 
-      {message && <p className="mt-2 text-center text-sm">{message}</p>}
+      {error && <p className="mt-2 text-center text-sm">{error}</p>}
     </form>
   );
 };

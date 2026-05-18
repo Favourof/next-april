@@ -1,3 +1,5 @@
+import { prisma } from "@/lib/prisma";
+
 export async function POST(req: Request) {
   try {
     const { title, content, authorId } = await req.json();
@@ -9,10 +11,19 @@ export async function POST(req: Request) {
         },
       );
     }
+
     // Here you would typically save the blog post to your database
-    console.log("Blog post created:", { title, content, authorId });
+
+    const blogPost = await prisma.blogPost.create({
+      data: {
+        title,
+        content,
+        authorId,
+      },
+    });
+    console.log("Blog post created:", blogPost);
     return new Response(
-      JSON.stringify({ message: "Blog post created successfully" }),
+      JSON.stringify({ message: "Blog post created successfully", blogPost }),
       {
         status: 201,
         headers: { "Content-Type": "application/json" },
