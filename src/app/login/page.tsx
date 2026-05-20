@@ -21,6 +21,8 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log(formData.email, "The form Data.....");
+
       await login(formData);
       router.push("/dashboard");
     } catch (err) {

@@ -1,8 +1,15 @@
 @import "tailwindcss";
+@source "../**/*.{js,ts,jsx,tsx,mdx}";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #070b14;
+  --foreground: #e5eefc;
+  --surface: rgba(13, 19, 33, 0.8);
+  --surface-strong: rgba(17, 24, 39, 0.94);
+  --border: rgba(148, 163, 184, 0.18);
+  --muted: #94a3b8;
+  --accent: #f4b860;
+  --accent-strong: #ffcf87;
 }
 
 @theme inline {
@@ -12,15 +19,65 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 38%, transparent);
+  color: #fff;
+}
+
+.dashboard-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 80px rgba(2, 6, 23, 0.32);
+  backdrop-filter: blur(18px);
+}
+
+.dashboard-panel-strong {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 80px rgba(2, 6, 23, 0.36);
+  backdrop-filter: blur(18px);
+}
+
+.dashboard-grid {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dashboard-shadow {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 20px 60px rgba(2, 6, 23, 0.28);
+}
+
+.dashboard-link {
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.dashboard-link:hover {
+  transform: translateY(-1px);
 }

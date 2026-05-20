@@ -3,6 +3,7 @@ import { authApi } from "@/lib/axios";
 import { AuthContextValue, AuthUser, LoginPayload } from "@/type/auth";
 import { ReactNode, useEffect, useState } from "react";
 import { AuthContext } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 type AuthProviderProps = {
   readonly children: ReactNode;
@@ -12,7 +13,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const router = useRouter();
   const isAuthenticated = !!user;
 
   const refreshUser = async () => {
@@ -21,9 +22,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
       const res = await authApi.me();
       setUser(res.data.user);
-    } catch (error) {
+    } catch (error: unknown) {
       // log the error and update state
-      console.error(error);
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error(error);
+      }
       setUser(null);
       setError("Unable to restore session");
     } finally {
@@ -42,15 +47,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const login = async ({ email, password }: LoginPayload) => {
+    console.log(email, password);
+
     try {
       setLoading(true);
       setError(null);
 
-      await authApi.login({ email, password });
-      await refreshUser();
-    } catch (err) {
+      const res = await authApi.login({ email, password });
+      console.log(res.data.response, "Login response data");
+      if (res.status === 200) {
+        console.log(res.data, "Login response data");
+        setUser(res.data.user);
+        router.push("/dashboard");
+        await refreshUser();
+      }
+    } catch (err: unknown) {
       setUser(null);
-      setError("Login failed");
+      let errorMessage = "Login failed";
+
+      // Check for axios error response FIRST
+      if (typeof err === "object" && err !== null && "response" in err) {
+        const response = (err as { response?: { data?: { error?: string } } })
+          .response;
+        errorMessage = response?.data?.error || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
@@ -63,6 +87,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
 
       // later: call a /auth/logout endpoint here
+      authApi.logout();
+      router.push("/login");
       setUser(null);
     } catch (err) {
       setError("Logout failed");
